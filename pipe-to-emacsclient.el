@@ -29,6 +29,9 @@
 
 ;;; Code:
 
+(require 'ansi-color)
+(require 'man)
+
 (defun pipe-to-emacsclient-batch ()
   (let ((tmpfilename (make-temp-file "pipe"))
         (mode-var "mode: pipe-to-emacsclient")
