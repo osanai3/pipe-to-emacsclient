@@ -41,12 +41,15 @@
      (format "-*- %s; %s; %s -*-\n" mode-var default-directory-var buffer-name-var)
      nil tmpfilename)
     (condition-case nil
-        (while (setq line (read-string ""))
-          (append-to-file (format "%s%s" line "\n") nil tmpfilename))
+        (let ((line ""))
+          (while (setq line (read-string ""))
+            (append-to-file (format "%s%s" line "\n") nil tmpfilename)))
       (error nil))
     (call-process "emacsclient" nil nil nil "-n" tmpfilename)))
 
 (define-derived-mode pipe-to-emacsclient-mode fundamental-mode "Pipe")
+
+(defvar pipe-to-emacsclient-buffer-name)
 
 (defun pipe-to-emacsclient-format ()
   (when (eq major-mode 'pipe-to-emacsclient-mode)
@@ -60,7 +63,6 @@
     (set-visited-file-name nil)
     ))
 
-(defvar pipe-to-emacsclient-buffer-name)
 (put 'pipe-to-emacsclient-buffer-name 'safe-local-variable 'stringp)
 
 (provide 'pipe-to-emacsclient)
