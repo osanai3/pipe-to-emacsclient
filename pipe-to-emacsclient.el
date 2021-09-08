@@ -21,11 +21,10 @@
 ;;; Commentary:
 
 ;; set PAGER environment variable
-;; emacs --batch -l /path/to/pipe-to-emacsclient.el --eval='(pipe-to-emacsclient-batch)'
+;; "emacs --batch -l /path/to/pipe-to-emacsclient.el --eval='(pipe-to-emacsclient-batch)'"
 
 ;; init.el
 ;; (require 'pipe-to-emacsclient)
-;; (add-hook 'find-file-hook 'pipe-to-emacsclient-format)
 
 ;;; Code:
 
