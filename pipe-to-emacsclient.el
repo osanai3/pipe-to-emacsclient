@@ -33,37 +33,27 @@
 (require 'man)
 
 (defun pipe-to-emacsclient-batch ()
+  "Call emacsclient to show stdin."
   (let ((tmpfilename (make-temp-file "pipe"))
-        (mode-var "mode: pipe-to-emacsclient")
-        (default-directory-var (format "default-directory: \"%s\"" default-directory))
-        (buffer-name-var (format "pipe-to-emacsclient-buffer-name: \"*%s*\"" (or (getenv "PIPE_TO_EMACSCLIENT_COMMAND") "pipe"))))
-    (append-to-file
-     (format "-*- %s; %s; %s -*-\n" mode-var default-directory-var buffer-name-var)
-     nil tmpfilename)
+        (buffer-name (or (getenv "PIPE_TO_EMACSCLIENT_COMMAND") "pipe")))
     (condition-case nil
         (let ((line ""))
           (while (setq line (read-string ""))
             (append-to-file (format "%s%s" line "\n") nil tmpfilename)))
       (error nil))
-    (call-process "emacsclient" nil nil nil "--eval" (format "(find-file \"%s\")" tmpfilename))))
+    (call-process "emacsclient" nil nil nil "--eval" (format "(pipe-to-emacsclient-find-file \"%s\" \"%s\" \"%s\")" tmpfilename buffer-name default-directory))))
 
-(define-derived-mode pipe-to-emacsclient-mode fundamental-mode "Pipe")
-
-(defvar pipe-to-emacsclient-buffer-name)
-
-(defun pipe-to-emacsclient-format ()
-  (when (eq major-mode 'pipe-to-emacsclient-mode)
+(defun pipe-to-emacsclient-find-file (filename name directory)
+  "Open FILENAME with buffer name NAME with 'default-directory' DIRECTORY and format buffer."
+  (with-current-buffer (generate-new-buffer name)
+    (setq default-directory directory)
+    (insert-file-contents-literally filename)
     (ansi-color-apply-on-region (point-min) (point-max))
     (Man-fontify-manpage)
     (goto-char (point-min))
-    (narrow-to-region (+ 1 (length (thing-at-point 'line t))) (point-max))
     (read-only-mode t)
     (set-buffer-modified-p nil)
-    (rename-buffer pipe-to-emacsclient-buffer-name t)
-    (set-visited-file-name nil)
-    ))
-
-(put 'pipe-to-emacsclient-buffer-name 'safe-local-variable 'stringp)
+    (select-window (display-buffer (current-buffer)))))
 
 (provide 'pipe-to-emacsclient)
 
