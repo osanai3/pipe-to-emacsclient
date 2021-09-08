@@ -45,7 +45,7 @@
           (while (setq line (read-string ""))
             (append-to-file (format "%s%s" line "\n") nil tmpfilename)))
       (error nil))
-    (call-process "emacsclient" nil nil nil "-n" tmpfilename)))
+    (call-process "emacsclient" nil nil nil "--eval" (format "(find-file \"%s\")" tmpfilename))))
 
 (define-derived-mode pipe-to-emacsclient-mode fundamental-mode "Pipe")
 
