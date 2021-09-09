@@ -40,7 +40,7 @@
           (while (setq line (read-string ""))
             (append-to-file (format "%s%s" line "\n") nil tmpfilename)))
       (error nil))
-    (call-process "emacsclient" nil nil nil "--eval" (format "(pipe-to-emacsclient-find-file \"%s\" \"%s\" \"%s\")" tmpfilename buffer-name default-directory))))
+    (call-process "emacsclient" nil nil nil "--eval" (format "%S" (list 'pipe-to-emacsclient-find-file tmpfilename buffer-name default-directory)))))
 
 (defun pipe-to-emacsclient-find-file (filename name directory)
   "Open FILENAME with buffer name NAME with 'default-directory' DIRECTORY and format buffer."
@@ -57,3 +57,4 @@
 (provide 'pipe-to-emacsclient)
 
 ;;; pipe-to-emacsclient.el ends here
+(format "%S" (list 'pipe-to-emacsclient-find-file "abc" "def" "ghi"))
