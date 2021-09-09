@@ -35,12 +35,18 @@
   "Call emacsclient to show stdin."
   (let ((tmpfilename (make-temp-file "pipe"))
         (buffer-name (or (getenv "PIPE_TO_EMACSCLIENT_COMMAND") "pipe")))
-    (condition-case nil
-        (let ((line ""))
-          (while (setq line (read-string ""))
-            (append-to-file (format "%s%s" line "\n") nil tmpfilename)))
-      (error nil))
-    (call-process "emacsclient" nil nil nil "--eval" (format "%S" (list 'pipe-to-emacsclient-find-file tmpfilename buffer-name default-directory)))))
+    (with-temp-file tmpfilename
+      (pipe-to-emacsclient-insert-stdin))
+    (call-process "emacsclient" nil nil nil "--eval"
+                  (format "%S" (list 'pipe-to-emacsclient-find-file tmpfilename buffer-name default-directory)))))
+
+(defun pipe-to-emacsclient-insert-stdin ()
+  "Insert stdin to current buffer."
+  (condition-case nil
+      (let ((line ""))
+        (while (setq line (read-string ""))
+          (insert (format "%s\n" line))))
+    (error nil)))
 
 (defun pipe-to-emacsclient-find-file (filename name directory)
   "Open FILENAME with buffer name NAME with 'default-directory' DIRECTORY and format buffer."
@@ -57,4 +63,3 @@
 (provide 'pipe-to-emacsclient)
 
 ;;; pipe-to-emacsclient.el ends here
-(format "%S" (list 'pipe-to-emacsclient-find-file "abc" "def" "ghi"))
