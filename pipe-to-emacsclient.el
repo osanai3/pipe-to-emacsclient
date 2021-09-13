@@ -3,7 +3,7 @@
 ;; Copyright (C) 2018 by Koichi Osanai
 
 ;; Author: Koichi Osanai <osanai3@gmail.com>
-;; Version: 0.1
+;; Version: 0.2
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
