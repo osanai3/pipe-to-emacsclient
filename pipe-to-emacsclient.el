@@ -28,9 +28,6 @@
 
 ;;; Code:
 
-(require 'ansi-color)
-(require 'man)
-
 (defun pipe-to-emacsclient-batch ()
   "Call emacsclient to show stdin."
   (let ((tmpfilename (make-temp-file "pipe"))
@@ -48,6 +45,10 @@
           (insert (format "%s\n" line))))
     (error nil)))
 
+(require 'ansi-color)
+(require 'man)
+
+;;;###autoload
 (defun pipe-to-emacsclient-find-file (filename name directory)
   "Open FILENAME with buffer name NAME with 'default-directory' DIRECTORY and format buffer."
   (with-current-buffer (generate-new-buffer name)
