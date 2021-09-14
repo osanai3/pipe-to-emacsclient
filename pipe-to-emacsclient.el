@@ -3,7 +3,7 @@
 ;; Copyright (C) 2018 by Koichi Osanai
 
 ;; Author: Koichi Osanai <osanai3@gmail.com>
-;; Version: 0.2
+;; Version: 0.2.1
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -22,9 +22,6 @@
 
 ;; set PAGER environment variable
 ;; "emacs --batch -l /path/to/pipe-to-emacsclient.el --eval='(pipe-to-emacsclient-batch)'"
-
-;; init.el
-;; (require 'pipe-to-emacsclient)
 
 ;;; Code:
 
@@ -45,17 +42,17 @@
           (insert (format "%s\n" line))))
     (error nil)))
 
-(require 'ansi-color)
-(require 'man)
-
 ;;;###autoload
 (defun pipe-to-emacsclient-find-file (filename name directory)
   "Open FILENAME with buffer name NAME with 'default-directory' DIRECTORY and format buffer."
   (with-current-buffer (generate-new-buffer name)
+    (require 'ansi-color)
+    (require 'man)
     (setq default-directory directory)
     (insert-file-contents-literally filename)
-    (ansi-color-apply-on-region (point-min) (point-max))
-    (Man-fontify-manpage)
+    (if (fboundp 'ansi-color-apply-on-region)
+        (ansi-color-apply-on-region (point-min) (point-max)))
+    (if (fboundp 'Man-fontify-manpage) (Man-fontify-manpage))
     (goto-char (point-min))
     (read-only-mode t)
     (set-buffer-modified-p nil)
