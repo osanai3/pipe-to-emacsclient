@@ -28,7 +28,7 @@
 (defun pipe-to-emacsclient-batch ()
   "Call emacsclient to show stdin."
   (let ((tmpfilename (make-temp-file "pipe"))
-        (buffer-name (or (getenv "PIPE_TO_EMACSCLIENT_COMMAND") "pipe")))
+        (buffer-name (or (getenv "PIPE_TO_EMACSCLIENT_BUFFER_NAME") "pipe")))
     (with-temp-file tmpfilename
       (pipe-to-emacsclient-insert-stdin))
     (call-process "emacsclient" nil nil nil "--eval"
