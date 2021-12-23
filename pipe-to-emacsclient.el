@@ -3,7 +3,7 @@
 ;; Copyright (C) 2018 by Koichi Osanai
 
 ;; Author: Koichi Osanai <osanai3@gmail.com>
-;; Version: 0.2.1
+;; Version: 0.2.2
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@
     (require 'ansi-color)
     (require 'man)
     (setq default-directory directory)
-    (insert-file-contents-literally filename)
+    (insert-file-contents filename)
     (if (fboundp 'ansi-color-apply-on-region)
         (ansi-color-apply-on-region (point-min) (point-max)))
     (if (fboundp 'Man-fontify-manpage) (Man-fontify-manpage))
@@ -59,5 +59,4 @@
     (select-window (display-buffer (current-buffer)))))
 
 (provide 'pipe-to-emacsclient)
-
 ;;; pipe-to-emacsclient.el ends here
